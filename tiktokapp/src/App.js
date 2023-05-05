@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import Video from './Video/Video';
+import axios from "./axios"
 function App() {
+  const [videos, setVideos]=useState([]);
+
+  useEffect(()=>{
+    async function fetchPosts(){
+      const response= await axios.get("/v2/posts");
+      setVideos (response.data);
+
+      return response;
+    }
+    fetchPosts();
+  },[]);
+  console.log(videos);
   return (
     <div className="App">
      <h1>lets build full stack mern stack App</h1>
      <div className='appVideos'>
-     <Video url="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-     channel="GameOfThrones" description="Mother Of Dragons" song="Dracarous!! Fire It Up" likes={250} shares={45} messages={13}/>
-     <Video url="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-     channel="GameOfThrones" description="Mother Of Dragons" song="Dracarous!! Fire It Up" likes={250} shares={45} messages={13}/>
+      {videos.map(({url, channel, description, song, likes, shares, messages})=>(
+        <Video
+        url={url}
+        channel={channel}
+        song={song}
+        likes={likes}
+        messages={messages}
+        description={description}
+        shares={shares}
+        />
+      ))}
+     
      </div>
      {/**App container */}
     </div>
